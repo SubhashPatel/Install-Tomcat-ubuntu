@@ -20,6 +20,9 @@ else
   sudo add-apt-repository ppa:webupd8team/java -y  && sudo apt-get update -y  && sudo apt-get install oracle-java8-installer -y && echo JAVA_HOME=/usr/lib/jvm/java-8-oracle >> /etc/environment && echo JRE_HOME=/usr/lib/jvm/java-8-oracle/jre >> /etc/environment && source /etc/environment
 fi
 
+# Create Tomcat User
+useradd -r -m -U -d /opt/tomcat -s /bin/false tomcat
+
 # Install Tomcat
 cd /opt/
 wget https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.8/bin/apache-tomcat-9.0.8.zip
@@ -27,11 +30,48 @@ unzip apache-tomcat-9.0.8.zip
 mv apache-tomcat-9.0.8 tomcat
 
 # Set Permission for execute
-chmod +x /opt/tomcat/bin/*.sh
+chown -RH tomcat: /opt/tomcat
+chmod o+x /opt/tomcat/bin/*.sh
+
+# Adjust the Firewall
+ufw allow 8080/tcp
+
+# Create Service files
+echo [Unit] >> /etc/systemd/system/tomcat.service
+echo Description=Tomcat 9 servlet container >> /etc/systemd/system/tomcat.service
+echo After=network.target >> /etc/systemd/system/tomcat.service
+echo  >> /etc/systemd/system/tomcat.service
+echo [Service] >> /etc/systemd/system/tomcat.service
+echo Type=forking >> /etc/systemd/system/tomcat.service
+echo  >> /etc/systemd/system/tomcat.service
+echo User=root >> /etc/systemd/system/tomcat.service
+echo Group=root >> /etc/systemd/system/tomcat.service
+echo  >> /etc/systemd/system/tomcat.service
+echo Environment="JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/systemd/system/tomcat.service
+echo Environment="JAVA_OPTS=-Djava.security.egd=file:///dev/urandom -Djava.awt.headless=true" >> /etc/systemd/system/tomcat.service
+echo  >> /etc/systemd/system/tomcat.service
+echo Environment="CATALINA_BASE=/opt/tomcat" >> /etc/systemd/system/tomcat.service
+echo Environment="CATALINA_HOME=/opt/tomcat" >> /etc/systemd/system/tomcat.service
+echo Environment="CATALINA_PID=/opt/tomcat/temp/tomcat.pid" >> /etc/systemd/system/tomcat.service
+echo Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC" >> /etc/systemd/system/tomcat.service
+echo  >> /etc/systemd/system/tomcat.service
+echo ExecStart=/opt/tomcat/bin/startup.sh >> /etc/systemd/system/tomcat.service
+echo ExecStop=/opt/tomcat/bin/shutdown.sh >> /etc/systemd/system/tomcat.service
+echo  >> /etc/systemd/system/tomcat.service
+echo [Install] >> /etc/systemd/system/tomcat.service
+echo WantedBy=multi-user.target >> /etc/systemd/system/tomcat.service
 
 # Start tomcat
-/opt/tomcat/bin/startup.sh
+sudo systemctl daemon-reload
+sudo systemctl start tomcat
+sudo systemctl status tomcat
+
+# Set auto start tomcat as a system boot
+sudo systemctl enable tomcat
 
 # Clean downloades files
 rm apache-tomcat-9.0.8.zip
 apt-get autoremove
+
+echo Tomcat is successfully installed at /opt/tomcat
+echo "you can start and stop tomcat using command : sudo service tomcat stop|start|status|restart" 
