@@ -10,6 +10,15 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
+# Check port 8080 is Free or Not
+netstat -ln | grep ":8080 " 2>&1 > /dev/null
+if [ $? -eq 1 ]; then
+     echo go ahead
+else
+     echo Port 8080 is allready used
+     exit 1
+fi
+
 # Prerequisite
 apt-get install unzip -y
 
