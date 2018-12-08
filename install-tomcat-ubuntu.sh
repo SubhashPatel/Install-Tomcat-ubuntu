@@ -26,8 +26,7 @@ wget https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.8/bin/apache-tomcat-9.
 unzip apache-tomcat-9.0.8.zip
 
 # Set Permission for execute
-chown -RH tomcat: /opt/apache-tomcat-9.0.8
-chmod o+x /opt/apache-tomcat-9.0.8/bin/*.sh
+chmod +x /opt/apache-tomcat-9.0.8/bin/*.sh
 
 # Adjust the Firewall
 ufw allow 8080/tcp
@@ -60,14 +59,13 @@ echo WantedBy=multi-user.target >> /etc/systemd/system/tomcat.service
 # Start tomcat
 sudo systemctl daemon-reload
 sudo systemctl start tomcat
-sudo systemctl status tomcat
 
 # Set auto start tomcat as a system boot
 sudo systemctl enable tomcat
 
 # Clean downloades files
-rm apache-tomcat-9.0.8.zip
+rm /opt/apache-tomcat-9.0.8.zip
 apt-get autoremove
 
-echo Tomcat is successfully installed at /opt/apache-tomcat-9.0.8
+echo "Tomcat is successfully installed at /opt/apache-tomcat-9.0.8" For Aceess tomcat Go to http://localhost:8080/
 echo "you can start and stop tomcat using command : sudo service tomcat stop|start|status|restart" 
