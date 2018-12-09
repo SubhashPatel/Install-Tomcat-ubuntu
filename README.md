@@ -1,2 +1,2 @@
-# Install-Tomcat-ubuntu
-Install tomcat on ubuntu using single shell script
+# Install-Tomcat-Linux
+Install tomcat on ubuntu and centos using single shell script
