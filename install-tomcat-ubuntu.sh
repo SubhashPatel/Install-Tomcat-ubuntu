@@ -41,29 +41,9 @@ chmod +x /opt/apache-tomcat-9.0.8/bin/*.sh
 ufw allow 8080/tcp
 
 # Create Service files
-echo [Unit] >> /etc/systemd/system/tomcat.service
-echo Description=Tomcat 9 servlet container >> /etc/systemd/system/tomcat.service
-echo After=network.target >> /etc/systemd/system/tomcat.service
-echo  >> /etc/systemd/system/tomcat.service
-echo [Service] >> /etc/systemd/system/tomcat.service
-echo Type=forking >> /etc/systemd/system/tomcat.service
-echo  >> /etc/systemd/system/tomcat.service
-echo User=root >> /etc/systemd/system/tomcat.service
-echo Group=root >> /etc/systemd/system/tomcat.service
-echo  >> /etc/systemd/system/tomcat.service
-echo Environment="JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/systemd/system/tomcat.service
-echo Environment="JAVA_OPTS=-Djava.security.egd=file:///dev/urandom -Djava.awt.headless=true" >> /etc/systemd/system/tomcat.service
-echo  >> /etc/systemd/system/tomcat.service
-echo Environment="CATALINA_BASE=/opt/apache-tomcat-9.0.8" >> /etc/systemd/system/tomcat.service
-echo Environment="CATALINA_HOME=/opt/apache-tomcat-9.0.8" >> /etc/systemd/system/tomcat.service
-echo Environment="CATALINA_PID=/opt/apache-tomcat-9.0.8/temp/tomcat.pid" >> /etc/systemd/system/tomcat.service
-echo Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC" >> /etc/systemd/system/tomcat.service
-echo  >> /etc/systemd/system/tomcat.service
-echo ExecStart=/opt/apache-tomcat-9.0.8/bin/startup.sh >> /etc/systemd/system/tomcat.service
-echo ExecStop=/opt/apache-tomcat-9.0.8/bin/shutdown.sh >> /etc/systemd/system/tomcat.service
-echo  >> /etc/systemd/system/tomcat.service
-echo [Install] >> /etc/systemd/system/tomcat.service
-echo WantedBy=multi-user.target >> /etc/systemd/system/tomcat.service
+cd /etc/systemd/system/
+wget https://s3.amazonaws.com/serverkaka-pubic-file/tomcat-ubuntu
+mv tomcat-ubuntu tomcat.service
 
 # Start tomcat
 sudo systemctl daemon-reload
