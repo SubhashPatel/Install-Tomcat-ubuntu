@@ -11,6 +11,6 @@ pool:
 
 steps:
 - script: |
-   - chmod +x install.sh
-    - ./install.sh
+   - chmod +x install-tomcat-ubuntu.sh
+    - ./install-tomcat-ubuntu.sh
   displayName: 'Run a multi-line script'
