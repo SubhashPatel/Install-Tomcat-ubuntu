@@ -9,8 +9,6 @@ trigger:
 pool:
   vmImage: 'Ubuntu-16.04'
 
-steps:
-- script: |
-   - chmod +x install-tomcat-ubuntu.sh
-    - ./install-tomcat-ubuntu.sh
-  displayName: 'Run a multi-line script'
+- task: ShellScript@2
+  inputs: 
+    scriptPath: install-tomcat-ubuntu.sh
